@@ -4,40 +4,52 @@ import java.util.Random;
 
 public class SimpleGeneratePassword {
 
-    private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
-    private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+    private static final String CHAR_LETTER = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMBER = "123456789";
     private static final String OTHER_CHAR = "!@#$%^&*()_+-=[]?";
 
-    private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
+    private static final String PASSWORD_LETTER_NUMBER_BASE = CHAR_LETTER + NUMBER;
+
+    private static final String PASSWORD_ALLOW_BASE = CHAR_LETTER + NUMBER + OTHER_CHAR;
+
+    private static final String PASSWORD_LETTER_NUMBER_BASE_SHUFFLE = shuffleString(PASSWORD_LETTER_NUMBER_BASE);
 
     private static final String PASSWORD_ALLOW_BASE_SHUFFLE = shuffleString(PASSWORD_ALLOW_BASE);
 
     private static Random random = new Random();
 
 
+    public static String generatePassword(String selectedItem, int length) {
 
-    //public static void main(String[] args) {
-      //  int length = 15;
-        //System.out.println(generatePassword(length));
-   // }
-
-    public static String generatePassword(int length) {
-        if (length < 1) {
-            throw new IllegalArgumentException("Длина не может быть менее 1-го");
-        }
         StringBuilder password = new StringBuilder(length);
 
-        password.append(CHAR_LOWER.charAt(random.nextInt(CHAR_LOWER.length())));
-        password.append(CHAR_UPPER.charAt(random.nextInt(CHAR_UPPER.length())));
-        password.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
-        password.append(OTHER_CHAR.charAt(random.nextInt(OTHER_CHAR.length())));
+        if (selectedItem.equals("Только цифры")) {
+            for (int i = 0; i < length; i++) {
+                password.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+            }
+        } else if (selectedItem.equals("Только буквы")) {
+            for (int i = 0; i < length; i++) {
+                password.append(CHAR_LETTER.charAt(random.nextInt(CHAR_LETTER.length())));
+            }
+        } else if (selectedItem.equals("Цифры и буквы")) {
+            password.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+            password.append(CHAR_LETTER.charAt(random.nextInt(CHAR_LETTER.length())));
 
-        for (int i = 0; i < length - 4; i++) {
-            password.append(PASSWORD_ALLOW_BASE_SHUFFLE.charAt(random.nextInt(PASSWORD_ALLOW_BASE_SHUFFLE.length())));
+            for (int i = 0; i < length - 2; i++) {
+                password.append(PASSWORD_LETTER_NUMBER_BASE_SHUFFLE.charAt(random.nextInt(PASSWORD_LETTER_NUMBER_BASE_SHUFFLE.length())));
+            }
+        } else if (selectedItem.equals("Цифры, буквы и символы")) {
+            password.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+            password.append(CHAR_LETTER.charAt(random.nextInt(CHAR_LETTER.length())));
+            password.append(OTHER_CHAR.charAt(random.nextInt(OTHER_CHAR.length())));
+
+            for (int i = 0; i < length - 3; i++) {
+                password.append(PASSWORD_ALLOW_BASE_SHUFFLE.charAt(random.nextInt(PASSWORD_ALLOW_BASE_SHUFFLE.length())));
+            }
         }
         return password.toString();
     }
+
 
     public static String shuffleString(String string) {
         String[] arr = string.split("");
