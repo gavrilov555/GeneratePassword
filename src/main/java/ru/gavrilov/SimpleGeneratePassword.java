@@ -1,5 +1,9 @@
 package ru.gavrilov;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 public class SimpleGeneratePassword {
@@ -19,9 +23,10 @@ public class SimpleGeneratePassword {
     private static Random random = new Random();
 
 
-    public static String generatePassword(String selectedItem, int length) {
+    public static String generatePassword(String selectedItem, int length, String description) {
 
         StringBuilder password = new StringBuilder(length);
+
 
         if (selectedItem.equals("Только цифры")) {
             for (int i = 0; i < length; i++) {
@@ -47,7 +52,21 @@ public class SimpleGeneratePassword {
                 password.append(PASSWORD_ALLOW_BASE_SHUFFLE.charAt(random.nextInt(PASSWORD_ALLOW_BASE_SHUFFLE.length())));
             }
         }
+        savePassword(String.valueOf(password), description);
         return password.toString();
+    }
+
+
+    private static void savePassword(String password, String description) {
+        File file = new File("   ");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            writer.write(password + " ");
+            writer.write(" - " + description);
+            writer.newLine();
+            writer.close();
+        } catch (IOException e) {
+        }
     }
 
 
