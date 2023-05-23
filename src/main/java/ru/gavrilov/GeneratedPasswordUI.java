@@ -35,6 +35,28 @@ public class GeneratedPasswordUI extends JFrame {
                         (int) lengthSpinner.getValue(),
                         descriptionField.getText());
                 passwordField.setText(password);
+
+                // Устанавливаем цвет фона текстового поля в зависимости от сложности пароля
+                if (SimpleGeneratePassword.checkPasswordStrength(password).equals("Слабый пароль")) {
+                    passwordField.setBackground(Color.RED);
+                } else if (SimpleGeneratePassword.checkPasswordStrength(password).equals("Умеренный пароль")) {
+                    passwordField.setBackground(Color.YELLOW);
+                } else {
+                    passwordField.setBackground(Color.GREEN);
+                }
+            }
+        });
+
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Сохраняем пароль и описание в файл
+                String password = passwordField.getText();
+                String description = descriptionField.getText();
+                SimpleGeneratePassword.savePassword(password, description);
+
+                // Очищаем текстовые поля после сохранения
+                passwordField.setText("");
+                descriptionField.setText("");
             }
         });
 
@@ -60,21 +82,23 @@ public class GeneratedPasswordUI extends JFrame {
         JPanel passwordPanel = new JPanel(new FlowLayout());
         passwordPanel.add(new JLabel(" Пароль:"));
         passwordPanel.add(passwordField);
-        //passwordPanel.add(new JLabel());
-        passwordPanel.add(saveButton);
-        passwordPanel.add(new JLabel(" Описание к паролю:"));
-        passwordPanel.add(descriptionField);
 
+
+        JPanel savePanel = new JPanel(new FlowLayout());
+        savePanel.add(new JLabel(" Описание к паролю:"));
+        savePanel.add(descriptionField);
+        savePanel.add(saveButton);
 
 
         // Добавляем панели на JFrame
         setLayout(new BorderLayout());
         add(optionsPanel, BorderLayout.NORTH);
         add(passwordPanel, BorderLayout.CENTER);
+        add(savePanel, BorderLayout.SOUTH);
 
         // Настраиваем JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 180);
+        setSize(650, 180);
         setLocationRelativeTo(null);
         setVisible(true);
     }

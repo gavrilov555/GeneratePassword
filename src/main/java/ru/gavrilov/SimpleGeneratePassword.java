@@ -27,7 +27,6 @@ public class SimpleGeneratePassword {
 
         StringBuilder password = new StringBuilder(length);
 
-
         if (selectedItem.equals("Только цифры")) {
             for (int i = 0; i < length; i++) {
                 password.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
@@ -52,20 +51,19 @@ public class SimpleGeneratePassword {
                 password.append(PASSWORD_ALLOW_BASE_SHUFFLE.charAt(random.nextInt(PASSWORD_ALLOW_BASE_SHUFFLE.length())));
             }
         }
-        savePassword(String.valueOf(password), description);
         return password.toString();
     }
 
 
-    private static void savePassword(String password, String description) {
-        File file = new File("   ");
+    protected static void savePassword(String password, String description) {
+        File file = new File("C:\\Users\\gavri\\OneDrive\\Рабочий стол\\MyPasswords.txt");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-            writer.write(password + " ");
-            writer.write(" - " + description);
+            writer.write(password + " " + "- " + description);
             writer.newLine();
             writer.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -83,4 +81,50 @@ public class SimpleGeneratePassword {
         }
         return String.join("", arr);
     }
+
+    public static String checkPasswordStrength(String password) {
+        int passwordStrength = 0;
+        boolean hasLowercase = false;
+        boolean hasUppercase = false;
+        boolean hasDigit = false;
+        boolean hasSpecialChar = false;
+
+        // Check for lowercase letters
+        if (password.matches(".*[a-z].*")) {
+            passwordStrength++;
+            hasLowercase = true;
+        }
+
+        // Check for uppercase letters
+        if (password.matches(".*[A-Z].*")) {
+            passwordStrength++;
+            hasUppercase = true;
+        }
+
+        // Check for digits
+        if (password.matches(".*d.*")) {
+            passwordStrength++;
+            hasDigit = true;
+        }
+
+        // Check for special characters
+        if (password.matches(".*[^a-zA-Z0-9].*")) {
+            passwordStrength++;
+            hasSpecialChar = true;
+        }
+
+        // Set the background color of the text field based on password strength
+        if (passwordStrength == 0) {
+            return "Очень слабый пароль";
+        } else if (passwordStrength == 1) {
+            return "Слабый пароль";
+        } else if (passwordStrength == 2) {
+            return "Умеренный пароль";
+        } else if (passwordStrength == 3) {
+            return "Сложный пароль";
+        } else {
+            return "Очень сложный";
+        }
+    }
+
 }
